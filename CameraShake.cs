@@ -1,5 +1,6 @@
 global using Godot;
 global using System;
+global using System.Collections.Generic;
 
 namespace GodotModules
 {
@@ -7,72 +8,83 @@ namespace GodotModules
     {
         private GTimer _timerDuration;
         private GTimer _timerFrequency;
-        private float _amplitudeX = 7;
-        private float _amplitudeY = 5;
-        private int _duration = 200;
-        private int _frequency = 40;
+        private ShakeInfo _currentShake;
+        private ShakeInfo _testShake;
 
         public override void _Ready()
         {
-            _timerDuration = new GTimer(this, nameof(StopShake), _duration, false, false);
-            _timerFrequency = new GTimer(this, nameof(SimulateShake), _frequency, true, false);
+            _currentShake = new(){
+                AmplitudeX = 7,
+                AmplitudeY = 5,
+                Duration = 200,
+                Frequency = 40,
+                Priority = 0
+            };
+            _testShake = _currentShake;
+            _timerDuration = new GTimer(this, nameof(StopShake), _currentShake.Duration, false, false);
+            _timerFrequency = new GTimer(this, nameof(SimulateShake), _currentShake.Frequency, true, false);
         }
 
         public override void _Input(InputEvent @event)
         {
             if (Input.IsActionJustPressed("ui_accept"))
             {
-                StartShake(_amplitudeX, _amplitudeY, _duration, _frequency);
+                StartShake(_testShake);
             }
         }
 
         private void _on_Amplitude_X_text_changed(string text)
         {
             if (int.TryParse(text, out int result))
-                _amplitudeX = result;
+                _testShake.AmplitudeX = result;
         }
 
         private void _on_Amplitude_Y_text_changed(string text)
         {
             if (int.TryParse(text, out int result))
-                _amplitudeY = result;
+                _testShake.AmplitudeY = result;
         }
 
         private void _on_Duration_text_changed(string text)
         {
             if (int.TryParse(text, out int result))
-                _duration = result;
+                _testShake.Duration = result;
         }
 
         private void _on_Frequency_text_changed(string text)
         {
             if (int.TryParse(text, out int result))
-                _frequency = result;
+                _testShake.Frequency = result;
         }
 
-        private void SimulateShake()
+        private void SimulateShake() =>
+            Offset = new Vector2((GD.Randf() - 0.5f) * _currentShake.AmplitudeX, (GD.Randf() - 0.5f) * _currentShake.AmplitudeY);
+
+        private void StartShake(ShakeInfo shakeInfo)
         {
-            var randomX = GD.Randf() - 0.5f;
-            var randomY = GD.Randf() - 0.5f;
+            if (shakeInfo.Priority < _currentShake.Priority)
+                return;
 
-            Offset = new Vector2(randomX * _amplitudeX, randomY * _amplitudeY);
-        }
+            _timerDuration.StartMs(shakeInfo.Duration);
+            _timerFrequency.StartMs(shakeInfo.Frequency);
 
-        private void StartShake(float amplitudeX = 7, float amplitudeY = 5, int duration = 200, int frequency = 40)
-        {
-            _amplitudeX = amplitudeX;
-            _amplitudeY = amplitudeY;
-            _duration = duration;
-            _frequency = frequency;
-
-            _timerDuration.StartMs(_duration);
-            _timerFrequency.StartMs(_frequency);
+            _currentShake = shakeInfo;
         }
 
         private void StopShake()
         {
             _timerFrequency.Stop();
+            _currentShake = default;
             Offset = Vector2.Zero;
         }
+    }
+
+    public struct ShakeInfo
+    {
+        public float AmplitudeX { get; set; }
+        public float AmplitudeY { get; set; }
+        public int Duration { get; set; }
+        public int Frequency { get; set; }
+        public int Priority { get; set; }
     }
 }
