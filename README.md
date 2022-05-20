@@ -11,3 +11,6 @@ Press `Enter` to start a shake.
 These values give a nice subtle shake.
 
 https://user-images.githubusercontent.com/6277739/169621183-40ed573e-837f-4564-9a22-7da0c5edec02.mp4
+
+## DialogueText
+https://user-images.githubusercontent.com/6277739/169625417-15e53a92-5ee4-4550-a8e4-8b4be507e79b.mp4
