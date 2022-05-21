@@ -5,6 +5,7 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathHotkeyList;
         private Control _hotkeyList;
         private Dictionary<string, HotkeyInfo> _defaultInputEvents;
+        private Dictionary<string, HotkeyInfo> _persistentInputEvents;
 
         public override void _Ready()
         {
@@ -28,7 +29,15 @@ namespace GodotModules
 
             LoadDefaults();
 
-            GD.Print(_defaultInputEvents.PrintFull());
+            _persistentInputEvents = DeepCopy(_defaultInputEvents);
+        }
+
+        public Dictionary<string, HotkeyInfo> DeepCopy(Dictionary<string, HotkeyInfo> data)
+        {
+            var dict = new Dictionary<string, HotkeyInfo>(data);
+            foreach (var e in dict)
+                e.Value.InputEventInfo = new List<InputEventInfo>(data[e.Key].InputEventInfo);
+            return dict;
         }
 
         public void LoadDefaults()
