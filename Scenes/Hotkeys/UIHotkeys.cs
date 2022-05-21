@@ -19,13 +19,16 @@ namespace GodotModules
                 if (actions.Count == 0)
                     continue;
 
-                _defaultInputEvents[actionGroup] = new HotkeyInfo {
+                _defaultInputEvents[actionGroup] = new HotkeyInfo
+                {
                     Category = "ui",
                     InputEventInfo = new List<InputEventInfo>()
                 };
             }
 
             LoadDefaults();
+
+            GD.Print(_defaultInputEvents.PrintFull());
         }
 
         public void LoadDefaults()
@@ -42,25 +45,20 @@ namespace GodotModules
                 uiHotkey.SetLabel(actionGroup);
 
                 var category = GetCategory(actionGroup);
+                _defaultInputEvents[actionGroup].Category = category;
 
                 foreach (var action in actions)
                 {
                     if (action is InputEvent inputEvent)
                     {
-                        switch (inputEvent)
-                        {
-                            case InputEventKey k:
-                                var e = _defaultInputEvents[actionGroup];
-                                e.Category = category;
-                                e.InputEventInfo.Add(ConvertToKeyInfo(k));
-                                break;
-                            case InputEventMouseButton m:
-                                _defaultInputEvents[actionGroup].Add(ConvertToMouseButtonInfo(m));
-                                break;
-                            case InputEventJoypadButton j:
-                                _defaultInputEvents[actionGroup].Add(ConvertToJoypadButtonInfo(j));
-                                break;
-                        }
+                        if (inputEvent is InputEventKey e)
+                            _defaultInputEvents[actionGroup].InputEventInfo.Add(Convert(e));
+
+                        if (inputEvent is InputEventMouseButton m)
+                            _defaultInputEvents[actionGroup].InputEventInfo.Add(Convert(m));
+
+                        if (inputEvent is InputEventJoypadButton j)
+                            _defaultInputEvents[actionGroup].InputEventInfo.Add(Convert(j));
 
                         uiHotkey.AddBtn(inputEvent.Display());
                     }
@@ -70,7 +68,7 @@ namespace GodotModules
 
         public string GetCategory(string actionGroup)
         {
-            var categories = new string[] {"ui", "player", "camera" };
+            var categories = new string[] { "ui", "player", "camera" };
             foreach (var category in categories)
                 if (actionGroup.ToLower() == category.ToLower())
                     return category.ToLower();
@@ -78,100 +76,79 @@ namespace GodotModules
             return categories[0];
         }
 
-        public InputEventKeyInfo ConvertToKeyInfo(InputEventKey e) =>
-            new InputEventKeyInfo
+        public InputEventInfo Convert(InputEvent e)
+        {
+            switch (e)
             {
-                InputEventInfoType = InputEventInfoType.Key,
-                Alt = e.Alt,
-                Command = e.Command,
-                Control = e.Control,
-                Device = e.Device,
-                Echo = e.Echo,
-                Meta = e.Meta,
-                PhysicalScancode = e.PhysicalScancode,
-                Pressed = e.Pressed,
-                Scancode = e.Scancode,
-                Shift = e.Shift,
-                Unicode = e.Unicode
-            };
+                case InputEventKey k:
+                    return new InputEventInfo
+                    {
+                        InputEventInfoType = InputEventInfoType.Key,
+                        Alt = k.Alt,
+                        Command = k.Command,
+                        Control = k.Control,
+                        Device = k.Device,
+                        Echo = k.Echo,
+                        Meta = k.Meta,
+                        PhysicalScancode = k.PhysicalScancode,
+                        Pressed = k.Pressed,
+                        Scancode = k.Scancode,
+                        Shift = k.Shift,
+                        Unicode = k.Unicode
+                    };
+                case InputEventMouseButton m:
+                    return new InputEventInfo
+                    {
+                        InputEventInfoType = InputEventInfoType.MouseButton,
+                        Alt = m.Alt,
+                        Command = m.Command,
+                        Control = m.Control,
+                        Device = m.Device,
+                        Meta = m.Meta,
+                        Pressed = m.Pressed,
+                        Shift = m.Shift,
+                        ButtonIndex = m.ButtonIndex,
+                        ButtonMask = m.ButtonMask,
+                        DoubleClick = m.Doubleclick,
+                        Factor = m.Factor,
+                    };
+                case InputEventJoypadButton j:
+                    return new InputEventInfo
+                    {
+                        InputEventInfoType = InputEventInfoType.JoypadButton,
+                        Device = j.Device,
+                        Pressed = j.Pressed,
+                        ButtonIndex = j.ButtonIndex,
+                        Pressure = j.Pressure
+                    };
+            }
 
-        public InputEventMouseButtonInfo ConvertToMouseButtonInfo(InputEventMouseButton e) =>
-            new InputEventMouseButtonInfo
-            {
-                InputEventInfoType = InputEventInfoType.MouseButton,
-                Alt = e.Alt,
-                Command = e.Command,
-                Control = e.Control,
-                Device = e.Device,
-                Meta = e.Meta,
-                Pressed = e.Pressed,
-                Shift = e.Shift,
-                ButtonIndex = e.ButtonIndex,
-                ButtonMask = e.ButtonMask,
-                DoubleClick = e.Doubleclick,
-                Factor = e.Factor,
-                GlobalPosition = e.GlobalPosition,
-                Position = e.Position
-            };
-
-        public InputEventJoypadButtonInfo ConvertToJoypadButtonInfo(InputEventJoypadButton e) =>
-            new InputEventJoypadButtonInfo
-            {
-                InputEventInfoType = InputEventInfoType.JoypadButton,
-                Device = e.Device,
-                Pressed = e.Pressed,
-                ButtonIndex = e.ButtonIndex,
-                Pressure = e.Pressure
-            };
+            throw new InvalidOperationException("This InputEventInfo is not a Key, MouseButton or JoypadButton event.");
+        }
     }
 
-    public class InputEventMouseButtonInfo : InputEventMouseInfo
+    public record struct InputEventInfo
     {
+        public InputEventInfoType InputEventInfoType { get; set; }
+        public int Device { get; set; }
         public int ButtonIndex { get; set; }
-        public bool DoubleClick { get; set; }
-        public float Factor { get; set; }
         public bool Pressed { get; set; }
-    }
-
-    public class InputEventMouseInfo : InputEventWithModifiersInfo
-    {
-        public int ButtonMask { get; set; }
-        public Vector2 GlobalPosition { get; set; }
-        public Vector2 Position { get; set; }
-    }
-
-    public class InputEventKeyInfo : InputEventWithModifiersInfo
-    {
-        public bool Echo { get; set; }
-        public uint PhysicalScancode { get; set; }
-        public bool Pressed { get; set; }
-        public uint Scancode { get; set; }
-        public uint Unicode { get; set; }
-    }
-
-    public class InputEventWithModifiersInfo : InputEventInfo
-    {
+        public float Pressure { get; set; }
         public bool Alt { get; set; }
         public bool Command { get; set; }
         public bool Control { get; set; }
         public bool Meta { get; set; }
         public bool Shift { get; set; }
+        public bool Echo { get; set; }
+        public uint PhysicalScancode { get; set; }
+        public uint Scancode { get; set; }
+        public uint Unicode { get; set; }
+        public int ButtonMask { get; set; }
+        public bool DoubleClick { get; set; }
+        public float Factor { get; set; }
     }
 
-    public class InputEventJoypadButtonInfo : InputEventInfo
-    {
-        public int ButtonIndex { get; set; }
-        public bool Pressed { get; set; }
-        public float Pressure { get; set; }
-    }
-
-    public class InputEventInfo
-    {
-        public InputEventInfoType InputEventInfoType { get; set; }
-        public int Device { get; set; }
-    }
-
-    public class HotkeyInfo 
+    public class HotkeyInfo
     {
         public string Category { get; set; }
         public List<InputEventInfo> InputEventInfo { get; set; }
