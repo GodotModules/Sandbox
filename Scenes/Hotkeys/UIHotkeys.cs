@@ -4,15 +4,42 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathHotkeyList;
         private Control _hotkeyList;
+
         private Dictionary<string, HotkeyInfo> _defaultInputEvents;
         private Dictionary<string, HotkeyInfo> _persistentInputEvents;
 
+        private SystemFileManager _systemFileManager;
+
         public override void _Ready()
         {
-            _defaultInputEvents = new Dictionary<string, HotkeyInfo>();
             _hotkeyList = GetNode<Control>(NodePathHotkeyList);
+            _systemFileManager = new();
 
+            LoadDefaults();
+            _persistentInputEvents = DeepCopy(_defaultInputEvents);
+
+            LoadPersistent();
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (Input.IsActionJustPressed("player_move_left")) 
+            {
+                GD.Print("moving left");
+            }
+        }
+
+        public Dictionary<string, HotkeyInfo> DeepCopy(Dictionary<string, HotkeyInfo> data)
+        {
+            var dict = new Dictionary<string, HotkeyInfo>(data);
+            dict.ForEach(x => x.Value.InputEventInfo = new List<InputEventInfo>(data[x.Key].InputEventInfo));
+            return dict;
+        }
+
+        public void LoadDefaults()
+        {
             // make sure all lists are defined
+            _defaultInputEvents = new Dictionary<string, HotkeyInfo>();
             foreach (string actionGroup in InputMap.GetActions())
             {
                 var actions = InputMap.GetActionList(actionGroup);
@@ -27,21 +54,6 @@ namespace GodotModules
                 };
             }
 
-            LoadDefaults();
-
-            _persistentInputEvents = DeepCopy(_defaultInputEvents);
-        }
-
-        public Dictionary<string, HotkeyInfo> DeepCopy(Dictionary<string, HotkeyInfo> data)
-        {
-            var dict = new Dictionary<string, HotkeyInfo>(data);
-            foreach (var e in dict)
-                e.Value.InputEventInfo = new List<InputEventInfo>(data[e.Key].InputEventInfo);
-            return dict;
-        }
-
-        public void LoadDefaults()
-        {
             foreach (string actionGroup in InputMap.GetActions())
             {
                 var actions = InputMap.GetActionList(actionGroup);
@@ -58,21 +70,96 @@ namespace GodotModules
 
                 foreach (var action in actions)
                 {
-                    if (action is InputEvent inputEvent)
-                    {
-                        if (inputEvent is InputEventKey e)
-                            _defaultInputEvents[actionGroup].InputEventInfo.Add(Convert(e));
-
-                        if (inputEvent is InputEventMouseButton m)
-                            _defaultInputEvents[actionGroup].InputEventInfo.Add(Convert(m));
-
-                        if (inputEvent is InputEventJoypadButton j)
-                            _defaultInputEvents[actionGroup].InputEventInfo.Add(Convert(j));
-
-                        uiHotkey.AddBtn(inputEvent.Display());
-                    }
+                    var inputEventInfo = ConvertToInputEventInfo(action);
+                    _defaultInputEvents[actionGroup].InputEventInfo.Add(inputEventInfo);
+                    uiHotkey.AddBtn(inputEventInfo.Display());
                 }
             }
+        }
+
+        private void LoadPersistent()
+        {
+            if (!_systemFileManager.ConfigExists("hotkeys"))
+                return;
+
+            var hotkeys = _systemFileManager.ReadConfig<Dictionary<string, HotkeyInfo>>("hotkeys");
+
+            foreach (var pair in hotkeys) 
+            {
+                var action = pair.Key;
+
+                InputMap.ActionEraseEvents(action);
+                foreach (var inputEventInfo in pair.Value.InputEventInfo)
+                    InputMap.ActionAddEvent(action, inputEventInfo.ConvertToInputEvent());
+            }
+
+            _persistentInputEvents = DeepCopy(hotkeys);
+        }
+
+        private void SaveHotkeys()
+        {
+            _systemFileManager.WriteConfig("hotkeys", _persistentInputEvents);
+        }
+
+        private InputEventInfo ConvertToInputEventInfo(object action)
+        {
+            if (action is InputEvent inputEvent)
+            {
+                switch (action)
+                {
+                    case InputEventKey k:
+                        return new InputEventInfo
+                        {
+                            InputEventInfoType = InputEventInfoType.Key,
+                            Alt = k.Alt,
+                            Command = k.Command,
+                            Control = k.Control,
+                            Device = k.Device,
+                            Echo = k.Echo,
+                            Meta = k.Meta,
+                            PhysicalScancode = k.PhysicalScancode,
+                            Pressed = k.Pressed,
+                            Scancode = k.Scancode,
+                            Shift = k.Shift,
+                            Unicode = k.Unicode
+                        };
+                    case InputEventMouseButton m:
+                        return new InputEventInfo
+                        {
+                            InputEventInfoType = InputEventInfoType.MouseButton,
+                            Alt = m.Alt,
+                            Command = m.Command,
+                            Control = m.Control,
+                            Device = m.Device,
+                            Meta = m.Meta,
+                            Pressed = m.Pressed,
+                            Shift = m.Shift,
+                            ButtonIndex = m.ButtonIndex,
+                            ButtonMask = m.ButtonMask,
+                            DoubleClick = m.Doubleclick,
+                            Factor = m.Factor,
+                        };
+                    case InputEventJoypadButton j:
+                        return new InputEventInfo
+                        {
+                            InputEventInfoType = InputEventInfoType.JoypadButton,
+                            Device = j.Device,
+                            Pressed = j.Pressed,
+                            ButtonIndex = j.ButtonIndex,
+                            Pressure = j.Pressure
+                        };
+                    case InputEventJoypadMotion jm:
+                        return new InputEventInfo
+                        {
+                            InputEventInfoType = InputEventInfoType.JoypadMotion,
+                            Device = jm.Device,
+                            Axis = jm.Axis,
+                            AxisValue = jm.AxisValue
+                        };
+                }
+            }
+
+            throw new InvalidOperationException($"Could not convert {action.GetType()} to InputEventInfo because it is not a supported InputEvent type.");
         }
 
         public string GetCategory(string actionGroup)
@@ -83,56 +170,6 @@ namespace GodotModules
                     return category.ToLower();
 
             return categories[0];
-        }
-
-        public InputEventInfo Convert(InputEvent e)
-        {
-            switch (e)
-            {
-                case InputEventKey k:
-                    return new InputEventInfo
-                    {
-                        InputEventInfoType = InputEventInfoType.Key,
-                        Alt = k.Alt,
-                        Command = k.Command,
-                        Control = k.Control,
-                        Device = k.Device,
-                        Echo = k.Echo,
-                        Meta = k.Meta,
-                        PhysicalScancode = k.PhysicalScancode,
-                        Pressed = k.Pressed,
-                        Scancode = k.Scancode,
-                        Shift = k.Shift,
-                        Unicode = k.Unicode
-                    };
-                case InputEventMouseButton m:
-                    return new InputEventInfo
-                    {
-                        InputEventInfoType = InputEventInfoType.MouseButton,
-                        Alt = m.Alt,
-                        Command = m.Command,
-                        Control = m.Control,
-                        Device = m.Device,
-                        Meta = m.Meta,
-                        Pressed = m.Pressed,
-                        Shift = m.Shift,
-                        ButtonIndex = m.ButtonIndex,
-                        ButtonMask = m.ButtonMask,
-                        DoubleClick = m.Doubleclick,
-                        Factor = m.Factor,
-                    };
-                case InputEventJoypadButton j:
-                    return new InputEventInfo
-                    {
-                        InputEventInfoType = InputEventInfoType.JoypadButton,
-                        Device = j.Device,
-                        Pressed = j.Pressed,
-                        ButtonIndex = j.ButtonIndex,
-                        Pressure = j.Pressure
-                    };
-            }
-
-            throw new InvalidOperationException("This InputEventInfo is not a Key, MouseButton or JoypadButton event.");
         }
     }
 
@@ -155,6 +192,8 @@ namespace GodotModules
         public int ButtonMask { get; set; }
         public bool DoubleClick { get; set; }
         public float Factor { get; set; }
+        public int Axis { get; set; }
+        public float AxisValue { get; set; }
     }
 
     public class HotkeyInfo
@@ -167,6 +206,7 @@ namespace GodotModules
     {
         Key,
         MouseButton,
-        JoypadButton
+        JoypadButton,
+        JoypadMotion
     }
 }

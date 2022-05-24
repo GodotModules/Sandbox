@@ -1,3 +1,5 @@
+using Timer = Godot.Timer;
+
 namespace GodotModules
 {
     public class GTimer
