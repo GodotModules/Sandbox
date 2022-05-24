@@ -20,7 +20,7 @@ namespace GodotModules
             switch (e.InputEventInfoType)
             {
                 case InputEventInfoType.Key:
-                    return $"{(KeyList)e.Scancode}";
+                    return e.Scancode != 0 ? $"{(KeyList)e.Scancode}" : $"{(KeyList)e.PhysicalScancode}";
 
                 case InputEventInfoType.MouseButton:
                     if (_mouseButtons.ContainsKey(e.ButtonIndex))

@@ -3,25 +3,24 @@ namespace GodotModules
     public class UIHotkey : Control
     {
         [Export] protected readonly NodePath NodePathLabel;
-        [Export] protected readonly NodePath NodePathBtnList;
-        [Export] protected readonly NodePath NodePathBtnPlus;
+        [Export] protected readonly NodePath NodePathBtn;
+
         private Label _label;
         private Control _btnList;
-        private Button _btnPlus;
+        private Button _btn;
 
         public override void _Ready()
         {
             _label = GetNode<Label>(NodePathLabel);
-            _btnList = GetNode<Control>(NodePathBtnList);
-            _btnPlus = GetNode<Button>(NodePathBtnPlus);
+            _btn = GetNode<Button>(NodePathBtn);
         }
 
-        public void SetLabel(string v) => _label.Text = v;
-        public void AddBtn(string v) 
+        public void SetAction(string v) => _label.Text = v;
+        public void SetBtnText(string v) => _btn.Text = v;
+
+        private void _on_Btn_pressed()
         {
-            var btn = new Button();
-            btn.Text = v;
-            _btnList.AddChild(btn);
+            GD.Print(_label.Text);
         }
     }
 }
