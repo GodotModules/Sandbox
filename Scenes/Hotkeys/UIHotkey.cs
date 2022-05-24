@@ -8,6 +8,7 @@ namespace GodotModules
         private Label _label;
         private Control _btnList;
         private Button _btn;
+        private string _action;
 
         public override void _Ready()
         {
@@ -15,13 +16,22 @@ namespace GodotModules
             _btn = GetNode<Button>(NodePathBtn);
         }
 
-        public void SetAction(string v) => _label.Text = v.Replace("_", " ").ToTitleCase().SmallWordsToUpper(2, (word) =>
+        public void SetAction(string v)
         {
-            var words = new string[] { "Up", "In" };
-            return !words.Contains(word);
-        });
-        
+            _action = v;
+            _label.Text = v.Replace("_", " ").ToTitleCase().SmallWordsToUpper(2, (word) =>
+            {
+                var words = new string[] { "Up", "In" };
+                return !words.Contains(word);
+            });
+        }
+
         public void SetBtnText(string v) => _btn.Text = v;
+
+        private void _on_Btn_focus_exited()
+        {
+            
+        }
 
         private void _on_Btn_pressed()
         {
