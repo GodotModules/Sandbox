@@ -15,7 +15,12 @@ namespace GodotModules
             _btn = GetNode<Button>(NodePathBtn);
         }
 
-        public void SetAction(string v) => _label.Text = v;
+        public void SetAction(string v) => _label.Text = v.Replace("_", " ").ToTitleCase().SmallWordsToUpper(2, (word) =>
+        {
+            var words = new string[] { "Up", "In" };
+            return !words.Contains(word);
+        });
+        
         public void SetBtnText(string v) => _btn.Text = v;
 
         private void _on_Btn_pressed()

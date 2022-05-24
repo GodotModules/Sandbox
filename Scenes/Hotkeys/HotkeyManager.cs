@@ -4,17 +4,17 @@ namespace GodotModules
     {
         public Dictionary<string, HotkeyInfo> DefaultInputEvents;
         public Dictionary<string, HotkeyInfo> PersistentInputEvents;
+        public List<string> Categories;
 
         private SystemFileManager _systemFileManager;
-        private List<string> _categories;
 
         public HotkeyManager()
         {
             _systemFileManager = new();
-            _categories = new();
+            Categories = new();
         }
 
-        public void AddCategories(params string[] v) => _categories.AddRange(v);
+        public void AddCategories(params string[] v) => Categories.AddRange(v);
 
         public void Init()
         {
@@ -154,11 +154,11 @@ namespace GodotModules
 
         public string GetCategory(string actionGroup)
         {
-            foreach (var category in _categories)
-                if (actionGroup.ToLower() == category.ToLower())
+            foreach (var category in Categories)
+                if (actionGroup.ToLower().Contains(category.ToLower()))
                     return category.ToLower();
 
-            return _categories[0];
+            return Categories[0];
         }
     }
 

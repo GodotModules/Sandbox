@@ -13,18 +13,23 @@ namespace GodotModules
 
             _hotkeyList = GetNode<Control>(NodePathHotkeyList);
 
-            foreach (var pair in hotkeyManager.DefaultInputEvents)
+            foreach (var category in hotkeyManager.Categories)
             {
-                var uiHotkey = Prefabs.UIHotkey.Instance<UIHotkey>();
-                _hotkeyList.AddChild(uiHotkey);
-                uiHotkey.SetAction(pair.Key);
-                uiHotkey.SetBtnText(pair.Value.InputEventInfo[0].Display());
+                var inputEventsCategory = hotkeyManager.DefaultInputEvents.Where(x => x.Value.Category == category).OrderBy(x => x.Key);
+
+                foreach (var pair in inputEventsCategory)
+                {
+                    var uiHotkey = Prefabs.UIHotkey.Instance<UIHotkey>();
+                    _hotkeyList.AddChild(uiHotkey);
+                    uiHotkey.SetAction(pair.Key);
+                    uiHotkey.SetBtnText(pair.Value.InputEventInfo[0].Display());
+                }
             }
         }
 
         public override void _Input(InputEvent @event)
         {
-            if (Input.IsActionJustPressed("player_move_left")) 
+            if (Input.IsActionJustPressed("player_move_left"))
             {
                 GD.Print("moving left");
             }
