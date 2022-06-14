@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/Inventory/SceneInventory.cs" type="Script" id=2]
+
+[node name="SceneInventory" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 3.0
+margin_top = 1.0
+margin_right = 3.0
+margin_bottom = 1.0
+script = ExtResource( 2 )
+NodePathCanvasLayer = NodePath("GUI Layer")
+NodePathCursorItem = NodePath("CursorItemLayer/CursorItem")
+
+[node name="GUI Layer" type="CanvasLayer" parent="."]
+
+[node name="CursorItemLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="CursorItem" type="Node2D" parent="CursorItemLayer"]
+position = Vector2( 3, 1 )
+z_index = 100

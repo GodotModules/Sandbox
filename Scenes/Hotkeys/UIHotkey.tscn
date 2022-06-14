@@ -22,4 +22,5 @@ margin_right = 199.0
 margin_bottom = 20.0
 text = "Enter"
 
+[connection signal="focus_exited" from="Btn" to="." method="_on_Btn_focus_exited"]
 [connection signal="pressed" from="Btn" to="." method="_on_Btn_pressed"]
