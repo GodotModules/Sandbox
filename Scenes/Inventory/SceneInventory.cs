@@ -5,14 +5,14 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathCursorItem;
         [Export] protected readonly NodePath NodePathCanvasLayer;
 
-        public static Item CursorIte { get; private set; }
-        public static Node2D CursorItem { get; private set; }
+        public static Node2D CursorItemParent { get; private set; }
+        public static Item CursorItem { get; set; }
         private CanvasLayer _canvasLayer;
 
         public override void _Ready()
         {
             _canvasLayer = GetNode<CanvasLayer>(NodePathCanvasLayer);
-            CursorItem = GetNode<Node2D>(NodePathCursorItem);
+            CursorItemParent = GetNode<Node2D>(NodePathCursorItem);
 
             Items.Init();
 
@@ -24,7 +24,7 @@ namespace GodotModules
         public override void _PhysicsProcess(float delta)
         {
             var offset = new Vector2(10, 10);
-            CursorItem.Position = GetGlobalMousePosition() + offset;
+            CursorItemParent.Position = GetGlobalMousePosition() + offset;
         }
     }
 }
