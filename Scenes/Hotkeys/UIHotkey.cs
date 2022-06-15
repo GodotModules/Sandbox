@@ -6,7 +6,6 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathBtn;
 
         private Label _label;
-        private Control _btnList;
         private Button _btn;
         private string _action;
 
