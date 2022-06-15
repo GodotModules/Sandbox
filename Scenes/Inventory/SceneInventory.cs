@@ -2,11 +2,12 @@ namespace GodotModules
 {
     public class SceneInventory : Control
     {
-        [Export] protected readonly NodePath NodePathCanvasLayer;
         [Export] protected readonly NodePath NodePathCursorItem;
+        [Export] protected readonly NodePath NodePathCanvasLayer;
 
-        private CanvasLayer _canvasLayer;
+        public static Item CursorIte { get; private set; }
         public static Node2D CursorItem { get; private set; }
+        private CanvasLayer _canvasLayer;
 
         public override void _Ready()
         {
