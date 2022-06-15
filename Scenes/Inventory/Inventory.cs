@@ -5,7 +5,7 @@ namespace GodotModules
         [Export] protected readonly NodePath NodePathGridContainer;
 
         private int _rows, _columns;
-        private Dictionary<Pos, InvItemContainer> _items = new();
+        private Dictionary<Pos, InvItemContainer> _itemContainers = new();
 
         public void Setup(int rows, int columns)
         {
@@ -18,19 +18,20 @@ namespace GodotModules
             var gridContainer = GetNode<GridContainer>(NodePathGridContainer);
             gridContainer.Columns = _columns;
 
-            for (int r = 0; r < _rows; r++)
+            for (int r = 1; r <= _rows; r++)
             {
-                for (int c = 0; c < _columns; c++)
+                for (int c = 1; c <= _columns; c++)
                 {
                     var invItemContainer = Prefabs.UIInvItemContainer.Instance<InvItemContainer>();
+                    invItemContainer.Pos = new Pos(r, c);
 
-                    _items.Add(new Pos(r, c), invItemContainer);
+                    _itemContainers.Add(new Pos(r, c), invItemContainer);
 
                     gridContainer.AddChild(invItemContainer);
                 }
             }
 
-            _items[new Pos(_rows - 1, _columns - 1)].AddItem("Item");
+            _itemContainers[new Pos(_rows, _columns)].SetItem("Item1");
         }
     }
 
@@ -44,5 +45,22 @@ namespace GodotModules
             X = x;
             Y = y;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            var other = (Pos)obj;
+
+            if (other.X == X && other.Y == Y)
+                return true;
+
+            return false;
+        }
+
+        public override int GetHashCode() => base.GetHashCode();
+
+        public override string ToString() => $"X: {X}, Y: {Y}";
     }
 }
