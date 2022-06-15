@@ -25,7 +25,14 @@ namespace GodotModules
             {
                 // need to also check if there is an item in the cursor at this time
 
-                
+                if (SceneInventory.CursorItem != null)
+                {
+                    SceneInventory.CursorItem.SetParent(this);
+                    Item = SceneInventory.CursorItem.Clone();
+                    _hasItem = true;
+
+                    SceneInventory.CursorItem = null;
+                }
 
                 // does not have any item
                 return;
