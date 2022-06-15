@@ -5,27 +5,13 @@ namespace GodotModules
         public Item Item { get; private set; }
         public Pos Pos { get; set; }
         
-        private Sprite _itemSprite;
         private bool _hasItem;
 
         public void SetItem(string name)
         {
             Item = new Item(name);
-            InitSprite(name);
-        }
-
-        private void InitSprite(string name)
-        {
-            var sprite = new Sprite();
-
-            var itemSize = RectSize - new Vector2(10, 10);
-
-            sprite.Texture = Items.Sprites[name];
-            sprite.Position = RectSize / 2; // inv size
-            sprite.Scale = itemSize / sprite.Texture.GetSize(); // item size
-
-            AddChild(sprite);
-            _itemSprite = sprite;
+            Item.InitSprite(RectSize);
+            AddChild(Item.Sprite);
             _hasItem = true;
         }
 
@@ -37,28 +23,31 @@ namespace GodotModules
             // left click
             if (!_hasItem)
             {
-                InitSprite("Item2");
+                // need to also check if there is an item in the cursor at this time
+
+                
+
+                // does not have any item
                 return;
             }
 
             if (_hasItem) 
             {
-                GD.Print(Pos);
+                // need to also check if there is an item in the cursor at this time
+                
                 // change parent of item sprite to cursor item
-                _itemSprite.GetParent().RemoveChild(_itemSprite);
-                SceneInventory.CursorItem.AddChild(_itemSprite);
-
+                Item.SetParent(SceneInventory.CursorItemParent);
+                SceneInventory.CursorItem = Item;
                 _hasItem = false;
             }
         }
     }
 
-    public class Item 
+    public class Item
     {
         public string Name { get; set; }
         public int Count { get; set; }
-
-        //private Sprite _sprite;
+        public Sprite Sprite { get; set; }
 
         public Item(string name, int count = 1)
         {
@@ -66,15 +55,25 @@ namespace GodotModules
             Count = count;
         }
 
-        /*public void SetParent(Node parent)
+        public void InitSprite(Vector2 containerSize)
         {
-            _sprite.GetParent()?.RemoveChild(_sprite);
-            parent.AddChild(_sprite);
-        }*/
+            Sprite = new Sprite();
+            Sprite.Texture = Items.Sprites[Name];
+            Sprite.Position = containerSize / 2; // inv size
+            Sprite.Scale = (containerSize - new Vector2(10, 10)) / Sprite.Texture.GetSize(); // item size
+        }
 
-        public Item Clone(Item item)
+        public void SetParent(Node parent)
         {
-            return new Item(Name, Count);
+            Sprite.GetParent()?.RemoveChild(Sprite);
+            parent.AddChild(Sprite);
+        }
+
+        public Item Clone()
+        {
+            var newItem = new Item(Name, Count);
+            newItem.Sprite = Sprite;
+            return newItem;
         }
     }
 }
