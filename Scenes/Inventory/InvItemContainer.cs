@@ -4,15 +4,12 @@ namespace GodotModules
     {
         public Item Item { get; private set; }
         public Pos Pos { get; set; }
-        
-        private bool _hasItem;
 
         public void SetItem(string name)
         {
             Item = new Item(name);
             Item.InitSprite(RectSize);
             AddChild(Item.Sprite);
-            _hasItem = true;
         }
 
         private void _on_InvItemContainer_gui_input(InputEvent @event)
@@ -21,7 +18,7 @@ namespace GodotModules
                 return;
 
             // left click
-            if (!_hasItem)
+            if (Item == null)
             {
                 // need to also check if there is an item in the cursor at this time
 
@@ -29,7 +26,6 @@ namespace GodotModules
                 {
                     SceneInventory.CursorItem.SetParent(this);
                     Item = SceneInventory.CursorItem.Clone();
-                    _hasItem = true;
 
                     SceneInventory.CursorItem = null;
                 }
@@ -38,14 +34,13 @@ namespace GodotModules
                 return;
             }
 
-            if (_hasItem) 
+            if (Item != null) 
             {
                 // need to also check if there is an item in the cursor at this time
                 
                 // change parent of item sprite to cursor item
                 Item.SetParent(SceneInventory.CursorItemParent);
                 SceneInventory.CursorItem = Item;
-                _hasItem = false;
             }
         }
     }
