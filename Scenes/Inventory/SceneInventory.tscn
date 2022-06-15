@@ -5,13 +5,9 @@
 [node name="SceneInventory" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 3.0
-margin_top = 1.0
-margin_right = 3.0
-margin_bottom = 1.0
 script = ExtResource( 2 )
-NodePathCanvasLayer = NodePath("GUI Layer")
 NodePathCursorItem = NodePath("CursorItemLayer/CursorItem")
+NodePathCanvasLayer = NodePath("GUI Layer")
 
 [node name="GUI Layer" type="CanvasLayer" parent="."]
 
