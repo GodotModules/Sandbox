@@ -14,10 +14,7 @@ namespace GodotModules
 
         public void InitSprite(Vector2 containerSize)
         {
-            Sprite = new Sprite();
-            Sprite.Texture = Items.Sprites[Name];
-            Sprite.Position = containerSize / 2; // inv size
-            Sprite.Scale = (containerSize - new Vector2(10, 10)) / Sprite.Texture.GetSize(); // item size
+            Sprite = CreateSprite(containerSize);
         }
 
         public void SetParent(Node parent)
@@ -26,11 +23,20 @@ namespace GodotModules
             parent.AddChild(Sprite);
         }
 
-        public Item Clone()
+        public Item Clone(Vector2 containerSize)
         {
             var newItem = new Item(Name, Count);
-            newItem.Sprite = Sprite;
+            newItem.Sprite = CreateSprite(containerSize);
             return newItem;
+        }
+
+        private Sprite CreateSprite(Vector2 containerSize)
+        {
+            var sprite = new Sprite();
+            sprite.Texture = Items.Sprites[Name];
+            sprite.Position = containerSize / 2; // inv size
+            sprite.Scale = (containerSize - new Vector2(10, 10)) / sprite.Texture.GetSize(); // item size
+            return sprite;
         }
     }
 }

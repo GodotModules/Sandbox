@@ -18,15 +18,20 @@ namespace GodotModules
                 return;
 
             // left click
+
             if (Item == null)
             {
-                // need to also check if there is an item in the cursor at this time
-
                 if (SceneInventory.CursorItem != null)
                 {
-                    SceneInventory.CursorItem.SetParent(this);
-                    Item = SceneInventory.CursorItem.Clone();
+                    // There is nothing in this inv slot and we are holding something in our hand
 
+                    // take the item from the cursor and put it in the inventory slot
+                    var item = SceneInventory.CursorItem.Clone(RectSize);
+                    Item = item;
+                    item.SetParent(this);
+
+                    // remove the item from the cursor
+                    SceneInventory.CursorItem.Sprite.QueueFree();
                     SceneInventory.CursorItem = null;
                 }
 
@@ -37,10 +42,15 @@ namespace GodotModules
             if (Item != null) 
             {
                 // need to also check if there is an item in the cursor at this time
-                
-                // change parent of item sprite to cursor item
-                Item.SetParent(SceneInventory.CursorItemParent);
-                SceneInventory.CursorItem = Item;
+
+                // put the item on the cursor
+                var item = Item.Clone(RectSize);
+                SceneInventory.CursorItem = item;
+                item.SetParent(SceneInventory.CursorItemParent);
+
+                // remove the item from the inv slot
+                Item.Sprite.QueueFree();
+                Item = null;
             }
         }
     }
