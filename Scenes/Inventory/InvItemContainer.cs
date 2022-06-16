@@ -26,12 +26,10 @@ namespace GodotModules
 
             // left click
 
-            if (Item == null)
+            if (Item == null) // There is no item here
             {
-                if (SceneInventory.CursorItem != null)
+                if (SceneInventory.CursorItem != null) // There is nothing in this inv slot and we are holding something in our hand
                 {
-                    // There is nothing in this inv slot and we are holding something in our hand
-
                     // take the item from the cursor and put it in the inventory slot
                     var item = SceneInventory.CursorItem.Clone(RectSize);
                     Item = item;
@@ -47,17 +45,21 @@ namespace GodotModules
                 return;
             }
 
-            if (Item != null) 
+            if (Item != null) // There is an item here
             {
-                if (SceneInventory.CursorItem != null)
+                if (SceneInventory.CursorItem != null) // There is an item in this inventory slot and an item on the cursor
                 {
-                    // There is an item in this inventory slot and an item on the cursor
-
-                    // put the item from the inv slot to the other inv slot that we picked up the first item from
+                    // EXPLANATION:
+                    // Lets say we have green item on cursor
+                    // and there is a red item for this inventory slot
+                    
+                    // The red item should go back to where we previously picked up the other item
+                    // and the green item should be dropped onto this inventory slot
                     var prevItem = Item.Clone(RectSize);
                     _inventory.ItemContainers[SceneInventory.PickedPos].Item = prevItem;
                     prevItem.SetParent(_inventory.ItemContainers[SceneInventory.PickedPos]);
 
+                    // Remove this old red item since the clone of the red item was moved to the previous slot
                     Item.Sprite.QueueFree();
                     Item = null;
 
