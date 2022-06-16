@@ -30,8 +30,11 @@ namespace GodotModules
                     gridContainer.AddChild(invItemContainer);
                 }
             }
+        }
 
-            _itemContainers[new Pos(_rows, _columns)].SetItem("Item1");
+        public void SetItem(int row, int column, string name) 
+        {
+            _itemContainers[new Pos(row, column)].SetItem(name);
         }
     }
 

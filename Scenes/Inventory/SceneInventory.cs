@@ -19,6 +19,8 @@ namespace GodotModules
             var inventory = Prefabs.UIInventory.Instance<Inventory>();
             inventory.Setup(5, 5);
             _canvasLayer.AddChild(inventory);
+            inventory.SetItem(5, 5, "Item1");
+            inventory.SetItem(4, 4, "Item2");
         }
 
         public override void _PhysicsProcess(float delta)
