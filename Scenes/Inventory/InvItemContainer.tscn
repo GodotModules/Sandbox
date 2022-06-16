@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Scenes/Inventory/InvItemContainer.cs" type="Script" id=1]
 
-[node name="InvItemContainer" type="PanelContainer"]
+[node name="InvItemContainer" type="Panel"]
 margin_right = 30.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 30, 30 )

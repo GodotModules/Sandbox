@@ -1,6 +1,6 @@
 namespace GodotModules
 {
-    public class InvItemContainer : PanelContainer
+    public class InvItemContainer : Control
     {
         public Item Item { get; private set; }
         public Pos Pos { get; set; }
