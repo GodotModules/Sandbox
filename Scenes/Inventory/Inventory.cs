@@ -4,8 +4,9 @@ namespace GodotModules
     {
         [Export] protected readonly NodePath NodePathGridContainer;
 
+        public Dictionary<Pos, InvItemContainer> ItemContainers = new();
+
         private int _rows, _columns;
-        private Dictionary<Pos, InvItemContainer> _itemContainers = new();
 
         public void Setup(int rows, int columns)
         {
@@ -24,8 +25,9 @@ namespace GodotModules
                 {
                     var invItemContainer = Prefabs.UIInvItemContainer.Instance<InvItemContainer>();
                     invItemContainer.Pos = new Pos(r, c);
+                    invItemContainer.Setup(this);
 
-                    _itemContainers.Add(new Pos(r, c), invItemContainer);
+                    ItemContainers.Add(new Pos(r, c), invItemContainer);
 
                     gridContainer.AddChild(invItemContainer);
                 }
@@ -34,7 +36,7 @@ namespace GodotModules
 
         public void SetItem(int row, int column, string name) 
         {
-            _itemContainers[new Pos(row, column)].SetItem(name);
+            ItemContainers[new Pos(row, column)].SetItem(name);
         }
     }
 

@@ -7,6 +7,7 @@ namespace GodotModules
 
         public static Node2D CursorItemParent { get; private set; }
         public static Item CursorItem { get; set; }
+        public static Pos PickedPos { get; set; }
         private CanvasLayer _canvasLayer;
 
         public override void _Ready()
