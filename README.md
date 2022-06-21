@@ -6,12 +6,13 @@ A repo created for testing mostly small scripts.
 #### Inventory
 https://user-images.githubusercontent.com/6277739/174914687-22dad5c7-6049-4fec-9bfa-99e47098fb2f.mp4
 
-TODO
+Todo
 - [ ] Stack items
 - [ ] Display stack count next to cursor when picking up an item
 - [ ] Right clicking a stack takes half the stack
 - [ ] Player inventory and chest inventory
 - [ ] Shift clicking a stack from chest brings that entire stack to the players inventory
+- [ ] Holding shift click + drag moves all stacks dragged over to players inventory
 - [ ] Inventory auto sort button(s)
 - [ ] Holding right click + drag places one item per each slot dragged over
 - [ ] Middle click takes all items from chest to players inventory
