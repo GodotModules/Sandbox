@@ -1,7 +1,7 @@
 # Sandbox
 A repo created for testing mostly small scripts.
 
-### GitHub
+### Contributing
 1. Fork this repo
 2. Clone your fork with `git clone https://github.com/<USERNAME>/GodotModules` (replace `<USERNAME>` with your GitHub username) 
     - *If you get `'git' is not recognized as an internal or external command` then install [Git scm](https://git-scm.com/downloads)*
