@@ -14,6 +14,7 @@ https://user-images.githubusercontent.com/6277739/169625417-15e53a92-5ee4-4550-a
 
 #### Hotkeys
 ![image](https://user-images.githubusercontent.com/6277739/174914954-3d6fb5fd-992c-452e-a4f6-2d6be237dd53.png)
+
 (see the dev branch of [Godot Modules CSharp](https://github.com/GodotModules/GodotModulesCSharp) for a more up-to-date version of the hotkeys)
 
 ## Contributing
