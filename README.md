@@ -12,6 +12,10 @@ https://user-images.githubusercontent.com/6277739/169621183-40ed573e-837f-4564-9
 #### DialogueText
 https://user-images.githubusercontent.com/6277739/169625417-15e53a92-5ee4-4550-a8e4-8b4be507e79b.mp4
 
+#### Hotkeys
+![image](https://user-images.githubusercontent.com/6277739/174914954-3d6fb5fd-992c-452e-a4f6-2d6be237dd53.png)
+(see the dev branch of [Godot Modules CSharp](https://github.com/GodotModules/GodotModulesCSharp) for a more up-to-date version of the hotkeys)
+
 ## Contributing
 1. Fork this repo
 2. Clone your fork with `git clone https://github.com/<USERNAME>/GodotModules` (replace `<USERNAME>` with your GitHub username) 
