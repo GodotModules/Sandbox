@@ -19,6 +19,14 @@ namespace GodotModules
             AddChild(Item.Sprite);
         }
 
+        public Item CloneItem() => Item.Clone(RectSize);
+
+        public void RemoveItem()
+        {
+            Item?.Sprite.QueueFree();
+            Item = null;
+        }
+
         private void _on_InvItemContainer_gui_input(InputEvent @event)
         {
             if (@event is not InputEventMouseButton mouseButton || mouseButton.ButtonIndex != (int)ButtonList.Left || !mouseButton.Pressed)
@@ -50,9 +58,8 @@ namespace GodotModules
                 if (SceneInventory.CursorItem != null) // There is an item in this inventory slot and an item on the cursor
                 {
                     // Get clone of current item and remove current item
-                    var curItem = Item.Clone(RectSize);
-                    Item.Sprite.QueueFree();
-                    Item = null;
+                    var curItem = CloneItem();
+                    RemoveItem();
 
                     // put the item from the cursor to this inventory slot
                     var cursorItem = SceneInventory.CursorItem.Clone(RectSize);
@@ -68,7 +75,7 @@ namespace GodotModules
 
                 // there is no item attached to the cursor right now
                 // put the item on the cursor
-                var item = Item.Clone(RectSize);
+                var item = CloneItem();
                 SceneInventory.CursorItem = item;
                 item.SetParent(SceneInventory.CursorItemParent);
 
@@ -76,8 +83,7 @@ namespace GodotModules
                 SceneInventory.PickedPos = Pos;
 
                 // remove the item from the inv slot
-                Item.Sprite.QueueFree();
-                Item = null;
+                RemoveItem();
                 return;
             }
         }
