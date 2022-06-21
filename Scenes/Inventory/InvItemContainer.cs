@@ -49,17 +49,8 @@ namespace GodotModules
             {
                 if (SceneInventory.CursorItem != null) // There is an item in this inventory slot and an item on the cursor
                 {
-                    // EXPLANATION:
-                    // Lets say we have green item on cursor
-                    // and there is a red item for this inventory slot
-                    
-                    // The red item should go back to where we previously picked up the other item
-                    // and the green item should be dropped onto this inventory slot
-                    var prevItem = Item.Clone(RectSize);
-                    _inventory.ItemContainers[SceneInventory.PickedPos].Item = prevItem;
-                    prevItem.SetParent(_inventory.ItemContainers[SceneInventory.PickedPos]);
-
-                    // Remove this old red item since the clone of the red item was moved to the previous slot
+                    // Get clone of current item and remove current item
+                    var curItem = Item.Clone(RectSize);
                     Item.Sprite.QueueFree();
                     Item = null;
 
@@ -68,12 +59,14 @@ namespace GodotModules
                     Item = cursorItem;
                     cursorItem.SetParent(this);
 
-                    // remove the item from the cursor
+                    // put clone of current item to cursor
                     SceneInventory.CursorItem.Sprite.QueueFree();
-                    SceneInventory.CursorItem = null;
+                    SceneInventory.CursorItem = curItem;
+                    curItem.SetParent(SceneInventory.CursorItemParent);
                     return;
                 }
 
+                // there is no item attached to the cursor right now
                 // put the item on the cursor
                 var item = Item.Clone(RectSize);
                 SceneInventory.CursorItem = item;
