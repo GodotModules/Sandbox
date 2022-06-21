@@ -3,8 +3,10 @@ namespace GodotModules
     public class InvItemContainer : Control
     {
         [Export] protected readonly NodePath NodePathSpriteParent;
+        [Export] protected readonly NodePath NodePathStackSize;
 
         private Control _spriteParent;
+        private Label _stackSize;
 
         public Item Item { get; private set; }
         public Pos Pos { get; set; }
@@ -14,6 +16,7 @@ namespace GodotModules
         public override void _Ready()
         {
             _spriteParent = GetNode<Control>(NodePathSpriteParent);
+            _stackSize = GetNode<Label>(NodePathStackSize);
         }
 
         public void Setup(Inventory inventory)
@@ -26,6 +29,14 @@ namespace GodotModules
             Item = new Item(name);
             Item.InitSprite(RectSize);
             _spriteParent.AddChild(Item.Sprite);
+            _stackSize.Text = "1";
+        }
+
+        private void SetItem(Item item)
+        {
+            Item = item;
+            item.SetParent(_spriteParent);
+            _stackSize.Text = "1";
         }
 
         public Item CloneItem() => Item.Clone(RectSize);
@@ -34,6 +45,7 @@ namespace GodotModules
         {
             Item?.Sprite.QueueFree();
             Item = null;
+            _stackSize.Text = "";
         }
 
         private void _on_InvItemContainer_gui_input(InputEvent @event)
@@ -49,8 +61,7 @@ namespace GodotModules
                 {
                     // take the item from the cursor and put it in the inventory slot
                     var item = SceneInventory.CursorItem.Clone(RectSize);
-                    Item = item;
-                    item.SetParent(_spriteParent);
+                    SetItem(item);
 
                     // remove the item from the cursor
                     SceneInventory.CursorItem.Sprite.QueueFree();
@@ -72,8 +83,7 @@ namespace GodotModules
 
                     // put the item from the cursor to this inventory slot
                     var cursorItem = SceneInventory.CursorItem.Clone(RectSize);
-                    Item = cursorItem;
-                    cursorItem.SetParent(_spriteParent);
+                    SetItem(cursorItem);
 
                     // put clone of current item to cursor
                     SceneInventory.CursorItem.Sprite.QueueFree();
