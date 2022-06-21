@@ -60,8 +60,7 @@ namespace GodotModules
                 if (SceneInventory.CursorItem != null) // There is nothing in this inv slot and we are holding something in our hand
                 {
                     // take the item from the cursor and put it in the inventory slot
-                    var item = SceneInventory.CursorItem.Clone(RectSize);
-                    SetItem(item);
+                    SetItem(SceneInventory.CursorItem.Clone(RectSize));
 
                     // remove the item from the cursor
                     SceneInventory.CursorItem.Sprite.QueueFree();
@@ -82,8 +81,7 @@ namespace GodotModules
                     RemoveItem();
 
                     // put the item from the cursor to this inventory slot
-                    var cursorItem = SceneInventory.CursorItem.Clone(RectSize);
-                    SetItem(cursorItem);
+                    SetItem(SceneInventory.CursorItem.Clone(RectSize));
 
                     // put clone of current item to cursor
                     SceneInventory.CursorItem.Sprite.QueueFree();
