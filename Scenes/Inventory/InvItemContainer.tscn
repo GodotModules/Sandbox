@@ -7,5 +7,19 @@ margin_right = 30.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 30, 30 )
 script = ExtResource( 1 )
+NodePathSpriteParent = NodePath("Sprite")
+
+[node name="Sprite" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="StackSize" type="Label" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -14.0
+text = "0"
+align = 1
 
 [connection signal="gui_input" from="." to="." method="_on_InvItemContainer_gui_input"]

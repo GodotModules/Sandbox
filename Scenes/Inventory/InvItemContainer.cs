@@ -2,10 +2,19 @@ namespace GodotModules
 {
     public class InvItemContainer : Control
     {
+        [Export] protected readonly NodePath NodePathSpriteParent;
+
+        private Control _spriteParent;
+
         public Item Item { get; private set; }
         public Pos Pos { get; set; }
 
         private Inventory _inventory { get; set; }
+
+        public override void _Ready()
+        {
+            _spriteParent = GetNode<Control>(NodePathSpriteParent);
+        }
 
         public void Setup(Inventory inventory)
         {
@@ -16,7 +25,7 @@ namespace GodotModules
         {
             Item = new Item(name);
             Item.InitSprite(RectSize);
-            AddChild(Item.Sprite);
+            _spriteParent.AddChild(Item.Sprite);
         }
 
         public Item CloneItem() => Item.Clone(RectSize);
@@ -41,7 +50,7 @@ namespace GodotModules
                     // take the item from the cursor and put it in the inventory slot
                     var item = SceneInventory.CursorItem.Clone(RectSize);
                     Item = item;
-                    item.SetParent(this);
+                    item.SetParent(_spriteParent);
 
                     // remove the item from the cursor
                     SceneInventory.CursorItem.Sprite.QueueFree();
@@ -64,7 +73,7 @@ namespace GodotModules
                     // put the item from the cursor to this inventory slot
                     var cursorItem = SceneInventory.CursorItem.Clone(RectSize);
                     Item = cursorItem;
-                    cursorItem.SetParent(this);
+                    cursorItem.SetParent(_spriteParent);
 
                     // put clone of current item to cursor
                     SceneInventory.CursorItem.Sprite.QueueFree();
