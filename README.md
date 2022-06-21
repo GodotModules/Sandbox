@@ -1,8 +1,6 @@
 # Sandbox
 A repo created for testing mostly small scripts.
 
-> ⚠️ Before committing anything please talk to `valk#9904` in the [Godot Modules Discord Server](https://discord.gg/866cg8yfxZ) so we can mitigate potential merge conflicts.
-
 ## Scenarios
 
 #### Inventory
@@ -22,3 +20,5 @@ https://user-images.githubusercontent.com/6277739/169625417-15e53a92-5ee4-4550-a
 4. Go to the source control tab
 5. All the files you make changes to should appear here as well, you can stage the files you want to commit, give the commit a message and then push it to your fork
 6. Once you have some commits on your fork, you can go [here](https://github.com/GodotModules/Sandbox/pulls) and open up a new pull request and request to merge your work with the main repo
+
+> ⚠️ Before committing anything please talk to `valk#9904` in the [Godot Modules Discord Server](https://discord.gg/866cg8yfxZ) so we can mitigate potential merge conflicts.
