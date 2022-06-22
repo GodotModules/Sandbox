@@ -19,6 +19,7 @@ Todo
 - [ ] Special inventory slots (main hand, head, body, leggings, boots, hands, shoulders, ring1, etc)
 - [ ] Quick stack to nearby chests
 - [ ] Quick take from nearby chests to fill existing item stacks
+- [ ] Show preview of chest contents when hovering over it
 
 #### CameraShakeTest
 https://user-images.githubusercontent.com/6277739/169621183-40ed573e-837f-4564-9a22-7da0c5edec02.mp4
