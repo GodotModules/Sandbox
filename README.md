@@ -17,9 +17,9 @@ Todo
 - [ ] Holding right click + drag places one item per each slot dragged over
 - [ ] Middle click takes all items from chest to players inventory
 - [ ] Special inventory slots (main hand, head, body, leggings, boots, hands, shoulders, ring1, etc)
-- [ ] Quick stack to nearby chests
-- [ ] Quick take from nearby chests to fill existing item stacks
-- [ ] Show preview of chest contents when hovering over it
+- [ ] Quick stack to nearby chests (would work for both 2D / 3D)
+- [ ] Quick take from nearby chests to fill existing item stacks (would work for both 2D / 3D)
+- [ ] Show preview of chest contents when hovering over it (would work for both 2D / 3D)
 
 #### CameraShakeTest
 https://user-images.githubusercontent.com/6277739/169621183-40ed573e-837f-4564-9a22-7da0c5edec02.mp4
