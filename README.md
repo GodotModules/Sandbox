@@ -1,10 +1,15 @@
 # Sandbox
 A repo created for testing mostly small scripts.
 
+This is a sandbox, it's a testing playground, it's not meant to be perfect. Once the work is done here, it will be merged with [Godot Modules CSharp](https://github.com/GodotModules/GodotModulesCSharp).
+
 ## Scenarios
 
 #### Inventory
 https://user-images.githubusercontent.com/6277739/174914687-22dad5c7-6049-4fec-9bfa-99e47098fb2f.mp4
+
+Vision
+- This will be like an inventory from Minecraft. Will not be supporting items that take up multiple slots like from Resident Evil because I like there being a noticable gap between slots, it just looks nice imo.
 
 Todo
 - [ ] Stack items
