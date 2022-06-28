@@ -22,6 +22,7 @@ namespace GodotModules
             _canvasLayer.AddChild(inventory);
             inventory.SetItem(5, 5, "Item1");
             inventory.SetItem(4, 4, "Item2");
+            inventory.SetItem(3, 3, "Item1");
         }
 
         public override void _PhysicsProcess(float delta)
